@@ -1,4 +1,4 @@
-package mp9.uf3.urls;
+package a1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
