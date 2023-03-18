@@ -1,3 +1,4 @@
+/*
 package a7;
 
 import java.io.*;
@@ -92,3 +93,5 @@ public class ClienteTCP extends Thread {
         clientTcp.start();
     }
 }
+
+ */

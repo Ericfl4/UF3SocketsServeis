@@ -1,3 +1,4 @@
+/*
 package a7;
 
 import java.io.Serializable;
@@ -33,3 +34,6 @@ public class Llista implements Serializable {
         return string;
     }
 }
+
+
+ */

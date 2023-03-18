@@ -1,3 +1,4 @@
+/*
 package a7;
 
 import java.io.*;
@@ -46,3 +47,5 @@ public class ServidorThread implements Runnable {
         }
     }
 }
+
+ */
