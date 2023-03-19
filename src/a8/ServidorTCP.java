@@ -1,28 +1,20 @@
 package a8;
 
-
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SrvTcpAdivina_Obj{
-    /* Servidor TCP que genera un número perquè ClientTcpAdivina_Obj.java jugui a encertar-lo
-     * i on la comunicació dels diferents jugadors la gestionaran els Threads : ThreadServidorAdivina_Obj.java
-     * */
-
+public class ServidorTCP {
     private int port;
     private SecretNum ns;
     private Tauler t;
-
-    private SrvTcpAdivina_Obj(int port, Tauler t) {
+    private ServidorTCP(int port, Tauler t) {
         this.port = port;
         ns = new SecretNum(100);
         this.t = t;
     }
-
     private void listen() {
         ServerSocket serverSocket = null;
         Socket clientSocket = null;
@@ -32,24 +24,27 @@ public class SrvTcpAdivina_Obj{
                 clientSocket = serverSocket.accept();
                 //Llançar Thread per establir la comunicació
                 //sumem 1 al numero de jugadors
-                t.addNUmPlayers();
-                ThreadSevidorAdivina_Obj FilServidor = new ThreadSevidorAdivina_Obj(clientSocket, ns, t);
+                t.addNumPlayers();
+                ThreadServidorTCP FilServidor = new ThreadServidorTCP(clientSocket, ns, t);
                 Thread client = new Thread(FilServidor);
                 client.start();
             }
         } catch (IOException ex) {
-            Logger.getLogger(SrvTcpAdivina_Obj.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-
-
+    public Tauler getTauler(){
+        return t;
+    }
         public static void main(String[] args) throws IOException {
         Tauler t = new Tauler();
-        SrvTcpAdivina_Obj srv = new SrvTcpAdivina_Obj(6000, t);
+        ServidorTCP srv = new ServidorTCP(6000, t);
+        //Creamos un thread que ejecute la acción de servidor:
         Thread thServ = new Thread(()->srv.listen());
         thServ.start();
-        SrvMulticast srvMulticast = new SrvMulticast(6001,"224.0.0.20",srv.t);
-        srvMulticast.runServer();
+        //Creamos un servidor multicast y le pasamos el mismo taulell lo que va a hacer es mostrarlo continuamente para que se vean en tiempo real las jugadas:
+        ServidorMulticast servidorMulticast = new ServidorMulticast(6001,"224.0.0.20",srv);
+        servidorMulticast.runServer();
     }
 }

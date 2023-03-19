@@ -9,8 +9,8 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ClientTcpAdivina_Obj extends Thread {
-    /* CLient TCP que ha endevinar un número pensat per SrvTcpAdivina_Obj.java */
+public class ClienteTCP extends Thread {
+    /* CLient TCP que ha endevinar un número pensat per ServidorTCP */
 
     private String Nom;
     private Socket socket;
@@ -21,7 +21,7 @@ public class ClientTcpAdivina_Obj extends Thread {
     private Tauler t;
     private Jugada j;
 
-    private ClientTcpAdivina_Obj(String hostname, int port) {
+    private ClienteTCP(String hostname, int port) {
         try {
             socket = new Socket(InetAddress.getByName(hostname), port);
             in = socket.getInputStream();
@@ -31,7 +31,6 @@ public class ClientTcpAdivina_Obj extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         continueConnected = true;
         scin = new Scanner(System.in);
         j = new Jugada();
@@ -42,7 +41,6 @@ public class ClientTcpAdivina_Obj extends Thread {
         while(continueConnected){
             //Llegir info del servidor (estat del tauler)
             t = getRequest();
-
             //Crear codi de resposta a missatge
             switch (t.resultat) {
                 case 3:	msg = "Benvingut al joc " + Nom + " - " + t.getNumPlayers(); break;
@@ -112,7 +110,7 @@ public class ClientTcpAdivina_Obj extends Thread {
             }
         } catch (IOException ex) {
             //enregistrem l'error amb un objecte Logger
-            Logger.getLogger(ClientTcpAdivina_Obj.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -126,7 +124,7 @@ public class ClientTcpAdivina_Obj extends Thread {
         System.out.println("Nom jugador:");
         jugador = sip.next();
 
-        ClientTcpAdivina_Obj clientTcp = new ClientTcpAdivina_Obj(ipSrv,6000);
+        ClienteTCP clientTcp = new ClienteTCP(ipSrv,6000);
 
         clientTcp.Nom = jugador;
         clientTcp.start();

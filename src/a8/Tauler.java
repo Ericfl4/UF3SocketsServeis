@@ -20,7 +20,7 @@ public class Tauler implements Serializable {
         return numPlayers;
     }
 
-    public void addNUmPlayers() {
+    public void addNumPlayers() {
         this.numPlayers++;
     }
 

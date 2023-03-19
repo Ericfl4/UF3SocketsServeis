@@ -1,12 +1,10 @@
 package a8;
 
-
-
 import java.io.*;
 import java.net.Socket;
 
-public class ThreadSevidorAdivina_Obj implements Runnable {
-    /* Thread que gestiona la comunicació de SrvTcPAdivina_Obj.java i un cllient ClientTcpAdivina_Obj.java */
+public class ThreadServidorTCP implements Runnable {
+    //Thread que gestiona la comunicació del ServidorTCP i un ClienteTCP
 
     private Socket clientSocket = null;
     private InputStream in = null;
@@ -15,11 +13,11 @@ public class ThreadSevidorAdivina_Obj implements Runnable {
     private Tauler tauler;
     private boolean acabat;
 
-    public ThreadSevidorAdivina_Obj(Socket clientSocket, SecretNum ns, Tauler t) throws IOException {
+    public ThreadServidorTCP(Socket clientSocket, SecretNum ns, Tauler t) throws IOException {
         this.clientSocket = clientSocket;
         this.ns = ns;
         tauler = t;
-        //Al inici de la comunicació el resultat ha de ser diferent de 0(encertat)
+        //Al inici de la comunicació el resultat ha de ser diferent de 0 (encertat)
         tauler.resultat = 3;
         acabat = false;
         //Enllacem els canals de comunicació
@@ -33,12 +31,10 @@ public class ThreadSevidorAdivina_Obj implements Runnable {
         Jugada j = null;
         try {
             while(!acabat) {
-
                 //Enviem tauler al jugador
                 ObjectOutputStream oos = new ObjectOutputStream(out);
                 oos.writeObject(tauler);
                 oos.flush();
-
                 //Llegim la jugada
                 ObjectInputStream ois = new ObjectInputStream(in);
                 try {
@@ -49,11 +45,10 @@ public class ThreadSevidorAdivina_Obj implements Runnable {
                 System.out.println("jugada: " + j.Nom + "->" + j.num);
                 if(!tauler.map_jugadors.containsKey(j.Nom)) tauler.map_jugadors.put(j.Nom, 1);
                 else {
-                    //Si el judador ja esxiteix, actualitzem la quatitat de tirades
+                    //Si el judador ja existeix, actualitzem la quantitat de tirades
                     int tirades = tauler.map_jugadors.get(j.Nom) + 1;
                     tauler.map_jugadors.put(j.Nom, tirades);
                 }
-
                 //comprobar la jugada i actualitzar tauler amb el resultat de la jugada
                 tauler.resultat = ns.comprova(j.num);
                 if(tauler.resultat == 0) {
@@ -75,5 +70,4 @@ public class ThreadSevidorAdivina_Obj implements Runnable {
             e.printStackTrace();
         }
     }
-
 }

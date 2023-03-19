@@ -7,31 +7,31 @@ import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 
-public class SrvMulticast {
+public class ServidorMulticast {
     MulticastSocket socket;
     InetAddress multicastIP;
     int port;
-    Tauler tauler;
-    boolean continueRunning = true;
+    ServidorTCP servidorTCP;
+    boolean continueRunning;
 
-    public SrvMulticast(int portValue, String strIp, Tauler tauler) throws IOException {
+    public ServidorMulticast(int portValue, String strIp, ServidorTCP servidorTCP) throws IOException {
         socket = new MulticastSocket(portValue);
         multicastIP = InetAddress.getByName(strIp);
         port = portValue;
-        this.tauler = tauler;
+        this.servidorTCP = servidorTCP;
+        continueRunning=true;
     }
-
 
     public void runServer() throws IOException {
         DatagramPacket packet;
         byte [] sendingData;
 
         while(continueRunning){
-            sendingData = tobyte();
-            packet = new DatagramPacket(sendingData, sendingData.length,multicastIP, port);
+            sendingData = toByte();
+            packet = new DatagramPacket(sendingData, sendingData.length, multicastIP, port);
             socket.send(packet);
             try {
-                Thread.sleep(300);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 ex.getMessage();
             }
@@ -39,10 +39,10 @@ public class SrvMulticast {
         socket.close();
     }
 
-    public byte[] tobyte() throws IOException {
+    public byte[] toByte() throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(tauler);
+        oos.writeObject(servidorTCP.getTauler());
         return baos.toByteArray();
     }
 }
